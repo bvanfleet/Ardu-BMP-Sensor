@@ -25,7 +25,7 @@ Repeats until the SD card is or user ends the logger.
 #include <SD.h>
 #include <SPI.h>
 #include <Adafruit_BMP085.h>
-#include "ErrorState.h"
+#include "LoggerUtilities.h"
 
 /***Pin definitions***/
 #define CARD_SELECT 10  // SD Shield card selector pin
@@ -41,32 +41,19 @@ Repeats until the SD card is or user ends the logger.
  HIGH RES           2
  ULTRA HIGH RES     3
 ******************************/
-Adafruit_BMP085 BMP180;
+Adafruit_BMP085 BMP;
 #define SAMPLING 3
 
 const long int SECOND = 1000, MINUTE = 60;    // Const for time conversions
 const short KBYTE = 1024;                     // Const for SD volume comparison
 
 /*****************************
-States to check and contain error messages
-eMessage string initialized to store error messages
-flag integer used to store error flags from ErrorState
+Declarations for File and Logger Utilites objects
+Declare clock variable for future use with logger
 ******************************/
-ErrorState boardState = ErrorState();
-String eMessage = "";
-int flag = 0;
-
-int clk;                        // Clock, with time stored in milis
-bool logger_Button = true;      // Button, if set to true, activates datalogger
 File data_txt;                  // File object used to log data
-
-/****************************
- getTime Function
- @Purpose: Returns the time, subtracts from clk, and 
- @Param: None
- @Return: time, in milis
-*****************************/
-int getTimeDelay();
+LoggerUtilities logger = LoggerUtilities(); // LoggerUtilites class to help manage constantly used functions
+int clk;                        // Clock, with time stored in milis
 
 /****************************
  getSD_Size Function
@@ -75,14 +62,6 @@ int getTimeDelay();
  @Return: SD volume size in MBs
 *****************************/
 double getSD_Size();
-
-/****************************
- checkState Function
- @Purpose: Check boardState for errors, quit program if any
- @Param: None
- @Return: None
-*****************************/
-void checkState();
 
 /****************************
  Setup Function
@@ -94,6 +73,18 @@ void setup() {
   pinMode(RED, OUTPUT);
   pinMode(BLUE, OUTPUT);
 
+  /***Error Flag Contants***
+    * 0 = None (initialized at construction)
+    * 1 = FATAL
+    * 2 = SERIAL OBJECT
+    * 3 = SD CARD
+    * 4 = BMP180 SENSOR
+  **************************/
+  const int FATAL = 1,
+    SERIAL_OBJ = 2,
+    SD_CARD = 3,
+    SENSOR = 4;
+  
   /*************************
   Initialization order:
    * Serial
@@ -106,28 +97,24 @@ void setup() {
   /***Serial initialization***/
   Serial.begin(9600);
   if(!Serial) {
-    flag = 2;
-    boardState.raiseFatalError();
+    logger.raiseErr(SERIAL_OBJ);
   }
   delay(500); // Half second delay to allow Serial to fully initialize
-  checkState();
+  logger.checkState(RED);
   Serial.println("Serial Initialized...");
 
   /***BMP180 initialization***/
-  if(!BMP180.begin(SAMPLING)) {
-    flag = 4;
-    boardState.raiseError(flag, "Error: Cannot initialize BMP180 sensor");
+  if(!BMP.begin(SAMPLING)) {
+    logger.raiseErr(SENSOR, "Error: Cannot initialize BMP180 sensor");
   }
-  checkState();
+  logger.checkState(RED);
   Serial.println("BMP180 Sensor Initialized...");
   
   /***SD initialziation***/
   if(!SD.begin(CARD_SELECT)) {
-    flag = 3;
-    boardState.raiseError(flag, "Error initializing SD card!");
+    logger.raiseErr(SD_CARD, "Error initializing SD card!");
   }
-  if(boardState.isError(flag, eMessage)) 
-  checkState();
+  logger.checkState(RED);
   Serial.println("SD Card Initialized...");
 
   /***Display message and time elapsed after initializations***/
@@ -142,7 +129,7 @@ void setup() {
 }
 
 void loop() {
-  int tDelay = getTimeDelay();
+  int tDelay = logger.getTimeDelay(clk);
   String data; // String initalized to hold the sensor readings to pass to data_txt
   int while_Loop_Delay = 5 * SECOND;
   const long int CUTOFF = 5 * SECOND * MINUTE;
@@ -190,10 +177,9 @@ void loop() {
     if(!SD.exists("BMP-Data/data.txt")) SD.mkdir("BMP-Data"); // If the file doesn't exitst, create it
     data_txt = SD.open("BMP-Data/data.txt", FILE_WRITE);
     if(!data_txt) {
-      flag = 5;
-      boardState.raiseError(flag, "Error: Cannot open data.txt");
+      logger.raiseErr(5, "Error: Cannot open data.txt");
     }
-    checkState();
+    logger.checkState(RED);
 
     // Turn BLUE on while data is being written
     digitalWrite(BLUE, HIGH);
@@ -208,7 +194,7 @@ void loop() {
     /***********************
      Temperature Reading
     ************************/
-    float temp = BMP180.readTemperature();
+    float temp = BMP.readTemperature();
     total_Temp += temp;
     
     data = "Temperature: ";
@@ -221,7 +207,7 @@ void loop() {
     /***********************
      Pressure Reading
     ************************/
-    float pressure = BMP180.readPressure();
+    float pressure = BMP.readPressure();
     total_Press += pressure;
     
     data = "Pressure: ";
@@ -242,7 +228,7 @@ void loop() {
     /***********************
      Recalculate tDelay for the while loop
     ************************/
-    tDelay = getTimeDelay();
+    tDelay = logger.getTimeDelay(clk);
   } // While(tDelay < CUTOFF)
 
   /*************************
@@ -250,10 +236,9 @@ void loop() {
   **************************/
   data_txt = SD.open("BMP-Data/data.txt", FILE_WRITE);
   if(!data_txt) {
-    flag = 5;
-    boardState.raiseError(flag, "Error: Cannot open data.txt");
+    logger.raiseErr(5, "Error: Cannot open data.txt");
   }
-  checkState();
+  logger.checkState(RED);
 
   data = "Average Temperature: ";
   data += (total_Temp / count);
@@ -266,14 +251,6 @@ void loop() {
   data_txt.close();
 
   clk = millis(); // Reset the clock after logging 5 minutes of data
-}
-
-/***getTimeDelay function implementation***/
-int getTimeDelay() {
-  int tempTime = millis();
-  int tDelay = tempTime - clk;
-
-  return tDelay;
 }
 
 /***getSD_Size function implementation***/
@@ -294,27 +271,5 @@ double getSD_Size() {
 
   // Return vSize
   return vSize;
-}
-
-/***checkState functions implementation***/
-void checkState() {
-  if(boardState.isFatal() && flag == 1)
-  {
-    digitalWrite(RED, HIGH);
-    exit(1);
-  }
-  else if(boardState.isError(flag, eMessage) && flag > 1)
-  {
-    do {
-    // Print error
-    Serial.println(eMessage);
-    delay(60); // Delay 60 ms to allow message to be displayed
-    } while(Serial.available());
-    
-    // Activate red LED and exit
-    digitalWrite(RED, HIGH);
-    exit(1);
-  }
-  else return;
 }
 
