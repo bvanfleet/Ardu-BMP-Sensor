@@ -75,26 +75,18 @@ public:
   // Parameters: Reference string, to gather any messages set
   // Returns: Boolean error state
   bool isError(int& flag, String& what) {
-    if (error && (eFlag != FATAL || eFlag != SERIAL_OBJ))
+    if (error && (eFlag == FATAL || eFlag == SERIAL_OBJ))
+    {
+      flag = eFlag;
+      return error;
+    }
+    else if (error && (eFlag != FATAL || eFlag != SERIAL_OBJ))
     {
       what = String(eMessage);
       flag = eFlag;
       return error;
     }
     else return error;
-  };
-
-  // Is Fatal Function
-  // Purpose: Returns if there has been a fatal error
-  //  Doesn't return a string
-  // Parameters: None
-  // Returns: Boolean, if error
-  bool isFatal()
-  {
-    if(eFlag == FATAL || SERIAL_OBJ)
-    {
-      return error;
-    }
   };
   
 }; // Class ErrorState
