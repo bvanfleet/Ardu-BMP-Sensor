@@ -53,7 +53,7 @@ BoardRead::BoardRead()
 
 int BoardRead::handleState()
 {
-	sID = 1;
+	sID = 0;
 
 
 
