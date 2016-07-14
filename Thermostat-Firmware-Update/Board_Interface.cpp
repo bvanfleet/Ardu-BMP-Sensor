@@ -31,12 +31,12 @@ Board_Interface::Board_Interface()
 Board_Interface* Board_Interface::getInstance()
 {
 	// Check if there's another instance and either create or return an instance
-	if (_BI == nullptr)
+	if (board == nullptr)
 	{
-		_BI = new Board_Interface;
+		board = new Board_Interface;
 	}
 
-	return _BI;
+	return board;
 }
 
 bool Board_Interface::is_Error()
@@ -100,7 +100,7 @@ void Board_Interface::writeSD()
 
 Board_Interface::~Board_Interface()
 {
-	if (_BI != nullptr)
+	if (board != nullptr)
 	{
 		delete bmp;
 	}

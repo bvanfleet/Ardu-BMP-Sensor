@@ -22,7 +22,7 @@ class Board_Interface
 {
 private:
 	/* Datamember declarations */
-	static Board_Interface* _BI;
+	Board_Interface* board;
 	Adafruit_BMP085* bmp;
 	int sdPin;
 	int sampling;
