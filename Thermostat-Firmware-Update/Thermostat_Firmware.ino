@@ -5,8 +5,6 @@
 */
 
 #include "States.h"
-#include <SD.h>
-#include <SPI.h>
 
 /* Pin Definitions */
 #define BTN 7  // Button pin

@@ -50,7 +50,6 @@ private:
 	int average;
 public:
 	BoardWrite();
-	BoardWrite(String);
 	int handleState();
 	~BoardWrite();
 };

@@ -8,8 +8,8 @@
 
 /* Required package inclusions */
 #include <Adafruit_BMP085.h>
-#include <SPI.h>
 #include <SD.h>
+#include <SPI.h>
 
 // Board_Interface singleton class
 // Designed by: Bradley Van Fleet
@@ -22,11 +22,17 @@ class Board_Interface
 {
 private:
 	/* Datamember declarations */
-	static Board_Interface* BI;
+	static Board_Interface* _BI;
 	Adafruit_BMP085* bmp;
 	int sdPin;
 	int sampling;
 	bool error;
+
+	/* Temperature and Pressure variables */
+	String data;
+	double avg_press;
+	double avg_temp;
+	int count;
 
 	/* Constructor function definitions */
 	Board_Interface();
@@ -51,6 +57,23 @@ public:
 	// @Param: None
 	// @Return: True or False, depending on if errors are present.
 	bool is_Error();
+	
+	// readBMP Function
+	//
+	// Description: Takes temperature and pressure reading from the sensor and stores
+	//  readings into the data string to write to SD card.
+	//
+	// @Param: None
+	// @Return: Void
+	void readBMP();
+
+	// writeSD Function
+	//
+	// Description: Writes data taken during the readBMP function and writes to the SD card.
+	//
+	// @Param: None
+	// @Return: Void
+	void writeSD();
 
 	// Board_Interface deconstructor
 	~Board_Interface();
