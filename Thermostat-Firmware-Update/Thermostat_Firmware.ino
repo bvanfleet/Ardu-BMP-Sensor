@@ -35,4 +35,5 @@ void setup() {
 
 void loop() {
 	sID = boardStates[sID]->handleState();
+	delay(60);
 }
