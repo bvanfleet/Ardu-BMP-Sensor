@@ -37,6 +37,7 @@ int BoardWait::handleState()
 	while (count <= MINUTE_TIMER_CUTOFF)
 	{
 		count = millis() - timer;
+		delay(1000);
 	}
 
 	return sID;
