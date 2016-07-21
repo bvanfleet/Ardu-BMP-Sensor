@@ -7,16 +7,26 @@
 #endif
 
 /* Important Global Definitions */
-#define LOCAL_TIMER_CUTOFF 0x493E0 // 5 minute timer cutoff
-#define MINUTE_TIMER_CUTOFF 0xEA60 // 1 minute timer cutoff
+#define LOCAL_TIMER_CUTOFF 300000 // 5 minute timer cutoff
+#define MINUTE_TIMER_CUTOFF 60000 // 1 minute timer cutoff
 
+/* Include the Board Interface class */
 #include "Board_Interface.h"
 
+// States abstract class and subclasses
+//
+// Developed by: Brad Van Fleet
+// Date Created: 7/13/2016
+// 
+// Description: Abstract base class and subclasses used for controling the hardware.
+//  All subclasses implement the abstract handleState function and return the
+//  state ID for the next state to be called.
 class States
 {
 public:
 	States();
 	virtual int handleState()=0;
+	virtual void is_Error(int);
 	virtual ~States();
 protected:
 	Board_Interface* _BI;

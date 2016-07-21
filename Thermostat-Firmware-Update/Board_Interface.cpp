@@ -21,11 +21,18 @@ Board_Interface::Board_Interface()
 		return;
 	}
 
+	delay(1000);
+
 	if (!SD.begin(sdPin))
 	{
 		error = true;
 		return;
 	}
+
+	File checkFile = SD.open("test.txt");
+	checkFile.close();
+
+	delay(2000);
 }
 
 Board_Interface* Board_Interface::getInstance()
@@ -77,8 +84,6 @@ void Board_Interface::writeSD()
 {
 	// Initialize filename string
 	String filename = "press-temp-log.txt";
-	
-	// Checks if the file already exists, and creates it if it does not
 
 	// Open the file stream and SD card,
 	//  and writes the contents of the data string to it.
