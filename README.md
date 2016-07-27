@@ -13,7 +13,7 @@ COPYRIGHT NOTICE
 
 ---
 
-##NOTES REGARDING THE CURCUIT
+## NOTES REGARDING THE CURCUIT
 
  To ensure proper function, please follow the below guidelines to ensure proper operation of
   the thermostat. Please be sure to also follow safety and regulatory guidelines for assembling
@@ -32,11 +32,34 @@ COPYRIGHT NOTICE
 * HIGH RES           2
 * ULTRA HIGH RES     3
 
- If you experience any issues with this software, or have any questions, please send me an [email](mailto:brad@guildofshades.com).
+
+If you experience any issues with this software, or have any questions, please send me an [email](mailto:brad@guildofshades.com).
 
 ---
 
-###IMPORTANT GNU PUBLIC LISCENCE NOTE
+## Notes Regarding Software Design
+
+For those interested in understanding how this program is currently set up, below you will find documentation regarding the code, patterns used, and the tasklist as it stands:
+
+* Design Patterns -
+  * [x] State Machine - overall program structure
+  * [x] Singleton - interface with board hardware
+  * [ ] Observer Pattern - control with future mobile app
+* Classes -
+  * States - There is an abstract parent class as well as 3 subclasses. There will be eventual subclasses added to handle new states, such as updating the information read.
+  * Board_Interface - Currently in charge of the [Bosch BMP180] sensor and the SD card. This interface may eventually handle the Wi-Fi shield. However, to keep it from becoming too large, I may split the functionality of that shield to just the Arduino Wi-Fi library, or it's own class.
+* Eventual Tasks -
+  * Change the file stream to write over the data after 10 writes.
+  * Synchronise the singleton objects to work in possible multi-threaded environments (especially with Wi-Fi).
+  * Interface to handle exchange from C++ read data to Java coded mobile app.
+
+*Please reference the [latest release] for the source code*
+
+[latest release]: https://github.com/bvanfleet/Ardu-BMP-Sensor/tree/v0.3-beta
+
+---
+
+### IMPORTANT GNU PUBLIC LISCENCE NOTE
 
 _This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
