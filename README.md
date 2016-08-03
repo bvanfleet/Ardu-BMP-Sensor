@@ -1,5 +1,5 @@
-COPYRIGHT NOTICE
-================
+Ardu BMP Sensor
+===============
 
  Created By: [Bradley Van Fleet](bvanfleet)
  Date Created: 7/12/2016
@@ -9,7 +9,10 @@ COPYRIGHT NOTICE
   pressure/temperature sensor to an Arduino. This code is still undergoing development and should not be
   used in professional settings, unless further modification is undertaken.
   
+  _Please reference my [wiki] regarding code documentation._
+  
   [Bosch BMP180]: https://ae-bst.resource.bosch.com/media/_tech/media/datasheets/BST-BMP180-DS000-121.pdf
+  [wiki]: https://github.com/bvanfleet/Ardu-BMP-Sensor/wiki
 
 ---
 
