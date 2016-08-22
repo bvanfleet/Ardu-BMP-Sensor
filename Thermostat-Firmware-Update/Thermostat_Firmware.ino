@@ -47,7 +47,6 @@ void setup() {
 
 void loop() {
 	sID = boardStates[sID]->handleState();
-<<<<<<< HEAD
 	boardStates[sID]->is_Error(RED);
 
 	if(sID == 2) ledBlink();
@@ -61,7 +60,4 @@ void ledBlink()
 	digitalWrite(BLUE, HIGH);
 	delay(tDelay);
 	digitalWrite(BLUE, LOW);
-=======
-	delay(60);
->>>>>>> BMP180
 }

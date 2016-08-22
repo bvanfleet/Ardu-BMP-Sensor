@@ -98,7 +98,6 @@ int BoardRead::handleState()
 
 BoardRead::~BoardRead()
 {
-<<<<<<< HEAD
 	if (_BI != nullptr)
 	{
 		delete _BI;
@@ -112,9 +111,6 @@ BoardRead::~BoardRead()
 BoardWrite::BoardWrite()
 	:States()
 {	}
-=======
-	sID = 0;
->>>>>>> BMP180
 
 int BoardWrite::handleState()
 {
@@ -135,7 +131,6 @@ int BoardWrite::handleState()
 
 	return sID;
 }
-<<<<<<< HEAD
 
 BoardWrite::~BoardWrite()
 {
@@ -144,5 +139,3 @@ BoardWrite::~BoardWrite()
 		delete _BI;
 	}
 }
-=======
->>>>>>> BMP180
