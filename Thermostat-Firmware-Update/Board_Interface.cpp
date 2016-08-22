@@ -1,11 +1,13 @@
 #include "Board_Interface.h"
 
-Board_Interface::Board_Interface()
+Board_Interface* Board_Interface::board;
+
+Board_Interface::Board_Interface(int sdSelect = 10, int sample = 2)
 {
 	/* General Board datamember initializations */
 	bmp = new Adafruit_BMP085;
-	sdPin = 10;
-	sampling = 2;
+	sdPin = sdSelect;
+	sampling = sample;
 	error = false;
 	
 	/* Temperature and Pressure variable initializations */
@@ -29,13 +31,10 @@ Board_Interface::Board_Interface()
 		return;
 	}
 
-	File checkFile = SD.open("test.txt");
-	checkFile.close();
-
 	delay(2000);
 }
 
-Board_Interface* Board_Interface::getInstance()
+Board_Interface* Board_Interface::getInstance() const
 {
 	// Check if there's another instance and either create or return an instance
 	if (board == nullptr)
@@ -46,7 +45,7 @@ Board_Interface* Board_Interface::getInstance()
 	return board;
 }
 
-bool Board_Interface::is_Error()
+bool Board_Interface::is_Error() const
 {
 	return error;
 }

@@ -22,7 +22,7 @@ class Board_Interface
 {
 private:
 	/* Datamember declarations */
-	Board_Interface* board;
+	static Board_Interface* board;
 	Adafruit_BMP085* bmp;
 	int sdPin;
 	int sampling;
@@ -35,7 +35,11 @@ private:
 	int count;
 
 	/* Constructor function definitions */
-	Board_Interface();
+	/* Standard constructor with default parameters */
+	/* @Param: SD Select pin number and BMP180 sampling settings, non-negative int */
+	Board_Interface(int, int);
+
+	/* Copy constructors are removed to maintain the singleton pattern */
 	Board_Interface(Board_Interface&) = delete;
 	Board_Interface(Board_Interface&&) = delete;
 
@@ -47,8 +51,8 @@ public:
 	//  object is created.
 	//
 	// @Param: None
-	// @Return: Pointer reference to Board_Interface object
-	Board_Interface* getInstance();
+	// @Return: Const pointer reference to Board_Interface object
+	Board_Interface* getInstance() const;
 
 	// is_Error function
 	//
@@ -56,7 +60,7 @@ public:
 	//
 	// @Param: None
 	// @Return: True or False, depending on if errors are present.
-	bool is_Error();
+	bool is_Error() const;
 	
 	// readBMP Function
 	//

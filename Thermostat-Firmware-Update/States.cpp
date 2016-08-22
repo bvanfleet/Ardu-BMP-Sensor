@@ -43,7 +43,7 @@ int BoardWait::handleState()
 
 	// Instance variables to be changed throughout the function
 	int sID = 1; // State ID number for the next state
-	int count = 0;
+	long int count = 0;
 
 	// Check if Board_Interface is null or has an error
 	if (_BI == nullptr)
