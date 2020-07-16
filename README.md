@@ -1,3 +1,5 @@
+> **!!! Warning !!!** This project is old, unloved, and unmaintained. While this may be done for historical reasons, I am archiving it primarily to officially end all involvement in this project. With this deprecation, the state of the code is not guaranteed to work on an Arduino, or any micro-controller/SBC, now or in the future. Anyone who attempts to use this project, you have been warned. You're on your own.
+
 Ardu BMP Sensor
 ===============
 
